@@ -23,7 +23,6 @@
  */
 
 require_once(__DIR__.'/../../config.php');
-require_once($CFG->libdir . '/filelib.php');
 
 $courseid = required_param('course', PARAM_INT);
 $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
@@ -37,37 +36,6 @@ if (!is_enrolled($coursecontext, $USER->id, '', true) &&
 }
 $PAGE->set_context($coursecontext);
 
-// API request.
-$curl = new \curl();
-
-// Set timeout.
-$curl->setopt(array('CURLOPT_TIMEOUT' => 5, 'CURLOPT_CONNECTTIMEOUT' => 5));
-
-// TODO: Auth header?
-
-// Query API.
-$params = [
-    'username' => $USER->username,
-    'email' => $USER->email,
-    'course' => $course->id,
-];
-$response = $curl->post('http://www.magmalearning.com/api/MoodleUser', $params);
-
-// Process errors.
-$info = $curl->get_info();
-if ($curlerrno = $curl->get_errno()) {
-    $failurereason = "Unexpected response, CURL error number: $curlerrno Error: {$curl->error}";
-} else if ((int)$info['http_code'] >= 400) {
-    $failurereason = "Unexpected response, HTTP code: " . $info['http_code'] . " Response: $response";
-}
-
-$response = json_decode($response, true);
-if (!empty($response['token'])) {
-    $iframesrc = new moodle_url('https://www.ari9000.com/landing-sso', ['token' => $response['token']]);
-} else {
-    $iframesrc = new moodle_url('https://www.ari9000.com/');
-}
-
 // Page setup. Configure navbar as if this is native course activity page.
 $PAGE->navbar->add(get_string('courses'), new moodle_url('/course/index.php'));
 $PAGE->navbar->add($course->shortname, new moodle_url('/course/view.php', ['id' => $course->id]));
@@ -78,15 +46,17 @@ $PAGE->set_url('/blocks/ari9000/view.php', ['course' => $course->id]);
 $PAGE->set_title(get_string('course') . ': ' . $course->fullname);
 $PAGE->set_heading(get_string('pluginname', 'block_ari9000'));
 
+[$iframesrc, $failurereason] = \block_ari9000\api::get_iframe_url($course->id);
+
 echo $OUTPUT->header();
 
-if (isset($failurereason)) {
+if (!empty($failurereason)) {
     // Output debug info.
     debugging($failurereason);
 }
 
 // TODO: Move to template.
-echo html_writer::tag('iframe', '', ['class' => 'block_ari9000_iframe', 'id' => 'ari9000content', 'src' => $iframesrc->out(false), 'height' => '600px', 'width' => '100%']);
+echo html_writer::tag('iframe', '', ['class' => 'block_ari9000_iframe', 'id' => 'ari9000content', 'src' => $iframesrc, 'height' => '600px', 'width' => '100%']);
 
 echo $OUTPUT->footer();
 
