@@ -35,6 +35,15 @@ class block_ari9000 extends block_base {
     }
 
     /**
+     * If header should be hidden.
+     *
+     * @return boolean
+     */
+    function hide_header() {
+        return false;
+    }
+
+    /**
      * Gets the block contents.
      *
      * @return string The block HTML.
@@ -45,7 +54,7 @@ class block_ari9000 extends block_base {
             return $this->content;
         }
 
-        $button = new single_button(new moodle_url('index.php'),
+        $button = new single_button(new moodle_url('/blocks/ari9000/view.php', ['course' => $this->page->course->id]),
             get_string('access', 'block_ari9000'), 'post', true);
 
         $this->content = new stdClass();
@@ -67,6 +76,7 @@ class block_ari9000 extends block_base {
 
     /**
      * Allows the block to be added multiple times to a single page
+     *
      * @return boolean
      */
     public function instance_allow_multiple() {
