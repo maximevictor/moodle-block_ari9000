@@ -46,17 +46,10 @@ $PAGE->set_url('/blocks/ari9000/view.php', ['course' => $course->id]);
 $PAGE->set_title(get_string('course') . ': ' . $course->fullname);
 $PAGE->set_heading(get_string('pluginname', 'block_ari9000'));
 
-[$iframesrc, $failurereason] = \block_ari9000\api::get_iframe_url($course->id);
+$output = $PAGE->get_renderer('block_ari9000');
+echo $output->header();
 
-echo $OUTPUT->header();
+$content = new \block_ari9000\output\activity_page($course->id);
+echo $output->render_activity_page($content);
 
-if (!empty($failurereason)) {
-    // Output debug info.
-    debugging($failurereason);
-}
-
-// TODO: Move to template.
-echo html_writer::tag('iframe', '', ['class' => 'block_ari9000_iframe', 'id' => 'ari9000content', 'src' => $iframesrc, 'height' => '600px', 'width' => '100%']);
-
-echo $OUTPUT->footer();
-
+echo $output->footer();

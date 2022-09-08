@@ -33,9 +33,9 @@ class api {
      * Generate iframe URL.
      *
      * @param int $courseid
-     * @return array Array containing url and failure reason strings.
+     * @return string
      */
-    public static function get_iframe_url($courseid): array {
+    public static function get_iframe_url($courseid): string {
         global $USER, $CFG;
         require_once($CFG->libdir . '/filelib.php');
 
@@ -63,6 +63,9 @@ class api {
         } else if ((int)$info['http_code'] >= 400) {
             $failurereason = "Unexpected response, HTTP code: " . $info['http_code'] . " Response: $response";
         }
+        if (!empty($failurereason)) {
+            debugging($failurereason);
+        }
 
         $response = json_decode($response, true);
         if (!empty($response['token'])) {
@@ -72,6 +75,6 @@ class api {
             $iframesrc = new moodle_url('https://www.ari9000.com/');
         }
 
-        return [$iframesrc->out(false), $failurereason];
+        return $iframesrc->out(false);
     }
 }
