@@ -24,6 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2022090800;
+$plugin->version = 2022090900;
 $plugin->requires  = 2020061500; // 3.9
 $plugin->component = 'block_ari9000';

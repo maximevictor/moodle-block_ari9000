@@ -1,3 +1,23 @@
-.block_ari9000_accessbutton {
-    text-align: center;
+.block_ari9000_accessbutton img {
+    top: -0.5rem;
+    position: relative;
+    width: 100%;
+}
+
+.block-ari9000-content-modal {
+    height: 90%;
+}
+
+.block-ari9000-content-modal .modal-content {
+    height: 100%;
+    overflow-y: clip !important;
+}
+
+.block-ari9000-content-modal .modal-body {
+    padding: 0px;
+}
+
+.block-ari9000-content-modal .content-iframe {
+    border: 0px;
+    position: relative;
 }

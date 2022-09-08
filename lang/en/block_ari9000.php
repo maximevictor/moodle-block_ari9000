@@ -22,6 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['access'] = 'Access';
+$string['openari'] = 'Open ARI 9000';
 $string['pluginname'] = 'ARI 9000';
 $string['privacy:metadata'] = 'The ARI 9000 block does not store any personal data.';

@@ -35,12 +35,28 @@ class block_ari9000 extends block_base {
     }
 
     /**
+     * JS required for block.
+     */
+    function get_required_javascript() {
+        $this->page->requires->js_call_amd('block_ari9000/content_modal', 'init');
+    }
+
+    /**
+     * Returns the aria role attribute that best describes this block.
+     *
+     * @return string
+     */
+    public function get_aria_role() {
+        return 'application';
+    }
+
+    /**
      * If header should be hidden.
      *
      * @return boolean
      */
     function hide_header() {
-        return false;
+        return true;
     }
 
     /**
@@ -54,12 +70,16 @@ class block_ari9000 extends block_base {
             return $this->content;
         }
 
-        $button = new single_button(new moodle_url('/blocks/ari9000/view.php', ['course' => $this->page->course->id]),
-            get_string('access', 'block_ari9000'), 'post', true);
+        $buttonimage = $OUTPUT->image_url('button', 'block_ari9000');
+        $image = html_writer::img($buttonimage->out(false), get_string('openari', 'block_ari9000'));
 
         $this->content = new stdClass();
-        $this->content->text = html_writer::tag('div', $OUTPUT->render($button),
-            ['class' => 'block_ari9000_accessbutton']);
+        $this->content->text = html_writer::link('#', $image, [
+            'class' => 'block_ari9000_accessbutton',
+            'data-action' => 'block_ari9000_show_modal',
+            'data-courseid' => $this->page->course->id,
+            'title' => get_string('openari', 'block_ari9000')
+        ]);
         $this->content->footer = '';
 
         return $this->content;
