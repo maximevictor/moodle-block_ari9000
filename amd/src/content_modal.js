@@ -45,6 +45,9 @@ const showContentModal = function(element) {
 
     const bodyPromise = Templates.render('block_ari9000/activity_page', {
         iframesrc: 'https://www.ari9000.com/'
+    }).then((element) => {
+        // Append dummy form element to prevent modal closing on backdrop click.
+        return element + '<form></form>';
     });
 
     ModalFactory.create({
