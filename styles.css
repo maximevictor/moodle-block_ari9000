@@ -1,7 +1,12 @@
+.block_ari9000 .content {
+    text-align: center;
+    clear: both;
+}
+
 .block_ari9000_accessbutton img {
     top: -0.5rem;
     position: relative;
-    width: 100%;
+    max-width: 200px;
 }
 
 .block_with_controls .block_ari9000_accessbutton img {
