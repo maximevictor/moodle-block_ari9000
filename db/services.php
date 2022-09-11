@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * ARI 9000 block version details.
+ * ARI 9000 external functions and service definitions.
  *
  * @package   block_ari9000
  * @copyright 2022 MAGMA Learning Sarl {@link https://www.magmalearning.com/}
@@ -24,6 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2022091100;
-$plugin->requires  = 2020061500; // 3.9
-$plugin->component = 'block_ari9000';
+$functions = [
+    'block_ari9000_get_iframe_url' => [
+        'classname' => \block_ari9000\external\get_iframe_url::class,
+        'methodname' => 'execute',
+        'description' => 'Get iframe url',
+        'type' => 'read',
+        'capabilities' => '',
+        'ajax' => true,
+    ]
+];

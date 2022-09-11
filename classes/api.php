@@ -33,9 +33,9 @@ class api {
      * Generate iframe URL.
      *
      * @param int $courseid
-     * @return string
+     * @return array Array containing URL string and optional error message.
      */
-    public static function get_iframe_url($courseid): string {
+    public static function get_iframe_url($courseid): array {
         global $USER, $CFG;
         require_once($CFG->libdir . '/filelib.php');
 
@@ -52,28 +52,25 @@ class api {
             'course' => $courseid,
         ];
 
-        $response = $curl->post('http://www.magmalearning.com/api/MoodleUser', $params);
+        $response = $curl->post('https://www.magmalearning.com/api/MoodleUser', $params);
 
         // Process errors.
         $info = $curl->get_info();
         $failurereason = '';
         if ($curlerrno = $curl->get_errno()) {
-            $failurereason = "Unexpected response, CURL error number: $curlerrno Error: {$curl->error}";
+            $failurereason = "Unexpected API response, CURL error number: $curlerrno Error: {$curl->error}";
         } else if ((int)$info['http_code'] >= 400) {
-            $failurereason = "Unexpected response, HTTP code: " . $info['http_code'] . " Response: $response";
-        }
-        if (!empty($failurereason)) {
-            debugging($failurereason);
+            $failurereason = "Unexpected API response, HTTP code: " . $info['http_code'] . " Response: $response";
         }
 
         $response = json_decode($response, true);
         if (!empty($response['token'])) {
             $iframesrc = new moodle_url('https://www.ari9000.com/landing-sso', ['token' => $response['token']]);
         } else {
-            // Getting token failed, use general page.
+            // Getting token failed, fallback to use general page.
             $iframesrc = new moodle_url('https://www.ari9000.com/');
         }
 
-        return $iframesrc->out(false);
+        return [$iframesrc->out(false), $failurereason];
     }
 }

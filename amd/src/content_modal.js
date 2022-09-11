@@ -27,6 +27,7 @@ import Notification from 'core/notification';
 import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
 import Templates from 'core/templates';
+import Ajax from 'core/ajax';
 
 /** @type {Object} Selectors. */
 const Selectors = {
@@ -39,12 +40,17 @@ const Selectors = {
  * @param {Element} element
  */
 const showContentModal = function(element) {
-    // TODO: Query local webservice to retrieve iframe URL.
-    const courseid = element.dataset.courseid;
-    window.console.log(courseid);
+    const request = {
+        methodname: 'block_ari9000_get_iframe_url',
+        args: {courseid: element.dataset.courseid},
+    };
 
-    const bodyPromise = Templates.render('block_ari9000/activity_page', {
-        iframesrc: 'https://www.ari9000.com/'
+    const bodyPromise = Ajax.call([request])[0].then(data => {
+        if (data.errormessage) {
+            // If debug mode on, data will contain error message.
+            window.console.error(data.errormessage);
+        }
+        return Templates.render('block_ari9000/activity_page', data);
     }).then((element) => {
         // Append dummy form element to prevent modal closing on backdrop click.
         return element + '<form></form>';
