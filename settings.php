@@ -15,15 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * ARI 9000 block language string.
+ * ARI 9000 settings.
  *
  * @package   block_ari9000
  * @copyright 2022 MAGMA Learning Sarl {@link https://www.magmalearning.com/}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['apikey'] = 'API Key';
-$string['apikeydesc'] = 'Specify API key obtained from MAGMA Learning';
-$string['openari'] = 'Open ARI 9000';
-$string['pluginname'] = 'ARI 9000';
-$string['privacy:metadata'] = 'The ARI 9000 block does not store any personal data.';
+defined('MOODLE_INTERNAL') || die;
+
+if ($ADMIN->fulltree) {
+
+    // API Key.
+    $setting = new admin_setting_configtext('block_ari9000/apikey',
+        new lang_string('apikey', 'block_ari9000'),
+        new lang_string('apikeydesc', 'block_ari9000'), '', PARAM_ALPHANUMEXT);
+    $settings->add($setting);
+}

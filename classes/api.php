@@ -44,10 +44,9 @@ class api {
         // Set timeout.
         $curl->setopt(array('CURLOPT_TIMEOUT' => 5, 'CURLOPT_CONNECTTIMEOUT' => 5));
 
-        // TODO: Use auth header and store credentials in general plugin settings?
-
         // Query API.
         $params = [
+            'api_key' => get_config('block_ari9000', 'apikey'),
             'username' => $USER->username,
             'email' => $USER->email,
             'course' => $courseid,

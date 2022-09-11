@@ -60,6 +60,16 @@ class block_ari9000 extends block_base {
     }
 
     /**
+     * Subclasses should override this and return true if the
+     * subclass block has a settings.php file.
+     *
+     * @return boolean
+     */
+    function has_config() {
+        return true;
+    }
+
+    /**
      * Gets the block contents.
      *
      * @return string The block HTML.
